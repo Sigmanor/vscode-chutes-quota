@@ -1,11 +1,13 @@
 # Chutes.ai Quota Monitor for VSCode
 
-A VSCode extension that monitors your Chutes.ai API quota usage and displays it directly in the status bar with real-time updates.
+A VSCode extension that monitors your Chutes.ai API subscription quota usage and displays it directly in the status bar with real-time updates.
+
+**Note**: This extension is an independent third-party tool and is not officially affiliated with or endorsed by chutes.ai or its developers. It is designed to help users monitor their subscription quotas.
 
 ## Features
 
-- **Status Bar Integration**: Shows current quota usage in format "Chutes: 380/2000 (19%)"
-- **Detailed Tooltips**: Hover over the status bar item to see detailed breakdown
+- **Status Bar Integration**: Shows current subscription quota usage in format "Chutes: 380/2000 (19%)"
+- **Detailed Tooltips**: Hover over the status bar item to see detailed breakdown of your subscription quota
 - **Auto-refresh**: Automatically updates quota information every 5 minutes (configurable)
 - **Manual Refresh**: Use the command palette to manually refresh quota data
 - **Secure Token Storage**: API tokens are stored securely using VSCode's built-in secret storage
@@ -38,8 +40,8 @@ This extension contributes the following settings:
 
 The extension provides the following commands accessible via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
-* `Chutes Quota: Show Details` - Display detailed quota information
-* `Chutes Quota: Refresh Quota` - Manually refresh quota data
+* `Chutes Quota: Show Details` - Display detailed subscription quota information
+* `Chutes Quota: Refresh Quota` - Manually refresh subscription quota data
 * `Chutes Quota: Set API Token` - Securely set or update your API token
 
 ## API Integration
@@ -47,7 +49,7 @@ The extension provides the following commands accessible via Command Palette (`C
 The extension uses the Chutes.ai API endpoint:
 - **URL**: `https://api.chutes.ai/users/me/quota_usage/me`
 - **Authentication**: Bearer token
-- **Response**: JSON with quota and used fields
+- **Response**: JSON with subscription quota and used fields
 
 ## Error Handling
 
@@ -63,7 +65,7 @@ The extension handles various error scenarios gracefully:
 
 The status bar item shows different states:
 
-- **Normal**: `Chutes: 380/2000 (19%)` - Current usage with percentage
+- **Normal**: `Chutes: 380/2000 (19%)` - Current subscription usage with percentage
 - **Loading**: `Chutes: Loading...` - During API requests
 - **Setup Required**: `Chutes: Setup Required` - When API token is missing
 - **Error**: `Chutes: Error` - When API requests fail
