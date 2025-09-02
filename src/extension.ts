@@ -63,11 +63,15 @@ class ChutesQuotaMonitor {
 	     this.promptForApiToken();
 	   });
 
-		const openSettingsCommand = vscode.commands.registerCommand('chutes-quota.openSettings', () => {
-			vscode.commands.executeCommand('workbench.action.openSettings', '@ext:sigmanor.vscode-chutes-quota');
-		});
+	    const removeTokenCommand = vscode.commands.registerCommand('chutes-quota.removeApiToken', () => {
+	      this.promptForTokenRemoval();
+	    });
 
-	   this.context.subscriptions.push(showDetailsCommand, refreshCommand, setTokenCommand, openSettingsCommand);
+	 const openSettingsCommand = vscode.commands.registerCommand('chutes-quota.openSettings', () => {
+	  vscode.commands.executeCommand('workbench.action.openSettings', '@ext:sigmanor.vscode-chutes-quota');
+	 });
+
+	   this.context.subscriptions.push(showDetailsCommand, refreshCommand, setTokenCommand, removeTokenCommand, openSettingsCommand);
 	}
 
 	private getConfiguration(): ChutesQuotaConfig {
@@ -83,6 +87,15 @@ class ChutesQuotaMonitor {
 
   private async setApiToken(token: string): Promise<void> {
     await this.context.secrets.store('chutesQuota.apiToken', token);
+  }
+
+  private async removeApiToken(): Promise<void> {
+    await this.context.secrets.delete('chutesQuota.apiToken');
+    // Clear cached data
+    this.cachedQuota = null;
+    this.cachedUsed = null;
+    this.cachedPercentage = null;
+    this.lastSuccessfulUpdate = null;
   }
 
   private async promptForApiToken(): Promise<void> {
@@ -111,6 +124,33 @@ class ChutesQuotaMonitor {
 
       // Refresh quota after setting new token
       this.updateQuota();
+    }
+  }
+
+  private async promptForTokenRemoval(): Promise<void> {
+    const currentToken = await this.getApiToken();
+    
+    // Check if there's actually a token to remove
+    if (!currentToken) {
+      vscode.window.showInformationMessage('No API token is currently configured.');
+      return;
+    }
+
+    const result = await vscode.window.showWarningMessage(
+      'Are you sure you want to remove your Chutes.ai API token? This will clear your authentication and reset the extension to the setup required state.',
+      { modal: true },
+      'Remove Token',
+      'Cancel'
+    );
+
+    if (result === 'Remove Token') {
+      await this.removeApiToken();
+      vscode.window.showInformationMessage('API token has been removed successfully.');
+      
+      // Update status bar to show setup required
+      this.statusBarItem.text = '$(warning) Chutes: Setup Required';
+      this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
+      this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
     }
   }
 
