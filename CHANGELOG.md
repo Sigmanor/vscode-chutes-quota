@@ -4,6 +4,12 @@ All notable changes to the "vscode-chutes-quota" extension will be documented in
 
 Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
 
+## [0.0.4] - 2025-09-02
+
+### Changed
+- style(tooltip): update tooltip text for clarity Improve tooltip formatting to enhance user understanding of daily quota usage
+- style(status-bar): update status bar text format
+
 ## [0.0.3] - 2025-09-02
 
 ### Added
