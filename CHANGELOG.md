@@ -2,13 +2,17 @@
 
 All notable changes to the "vscode-chutes-quota" extension will be documented in this file.
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
-
 ## [0.0.4] - 2025-09-02
+
+### Added
+- feat(status-bar): enhance status bar item functionality
 
 ### Changed
 - style(tooltip): update tooltip text for clarity Improve tooltip formatting to enhance user understanding of daily quota usage
 - style(status-bar): update status bar text format
+
+### Fixed
+- fix(api): increase timeout for API requests to 30 seconds
 
 ## [0.0.3] - 2025-09-02
 
