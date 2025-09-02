@@ -8,6 +8,7 @@ All notable changes to the "vscode-chutes-quota" extension will be documented in
 - feat(status-bar): enhance status bar item functionality
 - feat(status-bar): improve status bar display with caching
 - feat(commands): add command to remove API token and update display
+- feat(extension): add dynamic status bar command updates
 
 ### Changed
 - style(tooltip): update tooltip text for clarity Improve tooltip formatting to enhance user understanding of daily quota usage
