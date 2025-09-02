@@ -1,71 +1,83 @@
-# vscode-chutes-quota README
+# Chutes.ai Quota Monitor for VSCode
 
-This is the README for your extension "vscode-chutes-quota". After writing up a brief description, we recommend including the following sections.
+A VSCode extension that monitors your Chutes.ai API quota usage and displays it directly in the status bar with real-time updates.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Status Bar Integration**: Shows current quota usage in format "Chutes: 380/2000 (19%)"
+- **Detailed Tooltips**: Hover over the status bar item to see detailed breakdown
+- **Auto-refresh**: Automatically updates quota information every 5 minutes (configurable)
+- **Manual Refresh**: Use the command palette to manually refresh quota data
+- **Comprehensive Error Handling**: Clear error messages for API issues and missing configuration
+- **Easy Configuration**: Set your API token directly in VSCode settings
 
-For example if there is an image subfolder under your extension project workspace:
+![Status Bar Preview](https://via.placeholder.com/400x50/1e1e1e/ffffff?text=Chutes:%20380/2000%20(19%25))
 
-\!\[feature X\]\(images/feature-x.png\)
+## Setup
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+1. Install the extension
+2. Open VSCode Settings (`Ctrl+,` or `Cmd+,`)
+3. Search for "Chutes Quota"
+4. Enter your Chutes.ai API token in the `chutesQuota.apiToken` setting
+5. Optionally adjust the refresh interval (default: 5 minutes)
 
-## Requirements
-
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
-
-## Extension Settings
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
+## Configuration
 
 This extension contributes the following settings:
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+* `chutesQuota.apiToken`: Your Chutes.ai API token (required)
+* `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
 
-## Known Issues
+## Commands
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+The extension provides the following commands accessible via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
+
+* `Chutes Quota: Show Details` - Display detailed quota information
+* `Chutes Quota: Refresh Quota` - Manually refresh quota data
+
+## API Integration
+
+The extension uses the Chutes.ai API endpoint:
+- **URL**: `https://api.chutes.ai/users/me/quota_usage/me`
+- **Authentication**: Bearer token
+- **Response**: JSON with quota and used fields
+
+## Error Handling
+
+The extension handles various error scenarios gracefully:
+
+- **Missing API Token**: Shows warning with setup instructions
+- **Invalid Token**: Clear error message with guidance
+- **Network Issues**: Displays network error with retry options
+- **API Errors**: Shows specific error messages based on API response
+- **Rate Limiting**: Notifies when rate limits are exceeded
+
+## Status Bar States
+
+The status bar item shows different states:
+
+- **Normal**: `Chutes: 380/2000 (19%)` - Current usage with percentage
+- **Loading**: `Chutes: Loading...` - During API requests
+- **Setup Required**: `Chutes: Setup Required` - When API token is missing
+- **Error**: `Chutes: Error` - When API requests fail
+
+## Privacy
+
+This extension only communicates with the Chutes.ai API using your provided token. No data is collected or transmitted to third parties.
+
+## Requirements
+
+- VSCode version 1.103.0 or higher
+- Valid Chutes.ai API token
+- Internet connection for API requests
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+### 0.0.1
 
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+Initial release with core quota monitoring functionality:
+- Status bar integration
+- Auto-refresh with configurable intervals
+- Comprehensive error handling
+- Command palette integration
+- VSCode settings configuration
