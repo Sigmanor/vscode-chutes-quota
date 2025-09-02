@@ -71,7 +71,6 @@ The status bar item shows different states:
 - Tokens are never stored in plain text in settings or configuration files
 - The extension only communicates with the Chutes.ai API using your provided token
 - No data is collected or transmitted to third parties
-- Automatic migration from old insecure storage to secure storage
 
 ## Requirements
 
