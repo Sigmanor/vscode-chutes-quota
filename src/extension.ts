@@ -28,7 +28,8 @@ class ChutesQuotaMonitor {
 			vscode.StatusBarAlignment.Right,
 			100
 		);
-		this.statusBarItem.command = 'chutes-quota.openSettings';
+		// Command will be set dynamically based on state
+		this.updateStatusBarCommand();
 		this.statusBarItem.show();
 		
 		  // Migrate existing API token from settings to secure storage
@@ -151,6 +152,7 @@ class ChutesQuotaMonitor {
       this.statusBarItem.text = '$(warning) Chutes: Setup Required';
       this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+      this.updateStatusBarCommand();
     }
   }
 
@@ -202,6 +204,7 @@ class ChutesQuotaMonitor {
    this.statusBarItem.text = '$(warning) Chutes: Setup Required';
    this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
    this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+   this.updateStatusBarCommand();
    return;
   }
 
@@ -214,6 +217,7 @@ class ChutesQuotaMonitor {
 					this.statusBarItem.text = '$(sync~spin) Chutes: Loading...';
 					this.statusBarItem.tooltip = 'Fetching quota information...';
 					this.statusBarItem.backgroundColor = undefined;
+					this.updateStatusBarCommand();
 				}
 		try {
 			const response = await axios.get<ChutesQuotaResponse>(
@@ -264,6 +268,7 @@ Usage: ${percentage}%`;
 		const remaining = quota - used;
 		this.statusBarItem.tooltip = this.createTooltip(quota, used, remaining, percentage);
 		this.statusBarItem.backgroundColor = undefined;
+		this.updateStatusBarCommand();
 	}
 
 	private hasCachedData(): boolean {
@@ -279,6 +284,7 @@ Usage: ${percentage}%`;
 			// Set tooltip with refresh information
 			const remaining = this.cachedQuota - this.cachedUsed;
 			this.statusBarItem.tooltip = `${this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage)}\n\nRefreshing...`;
+			this.updateStatusBarCommand();
 		}
 	}
 
@@ -351,6 +357,7 @@ Usage: ${percentage}%`;
 		}
 		
 		this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
+		this.updateStatusBarCommand();
 
 		console.error('Chutes Quota Error:', error);
 	}
@@ -407,6 +414,28 @@ Usage: ${percentage}%`;
 				const percentage = match[3];
 				this.statusBarItem.text = `${isHovering ? '$(sync)' : '$(pulse)'} Chutes: ${used}/${quota} (${percentage}%)`;
 			}
+		}
+	}
+
+	/**
+	 * Update the status bar command based on the current state
+	 * When in "Setup Required" state, use setApiToken command
+	 * When in error state, use refresh command
+	 * In other states, use openSettings command
+	 */
+	private updateStatusBarCommand(): void {
+		if (this.statusBarItem.text.includes('Setup Required')) {
+			this.statusBarItem.command = 'chutes-quota.setApiToken';
+		} else if (this.statusBarItem.text.includes('Error') ||
+		           this.statusBarItem.text.includes('Invalid Token') ||
+		           this.statusBarItem.text.includes('Forbidden') ||
+		           this.statusBarItem.text.includes('Rate Limited') ||
+		           this.statusBarItem.text.includes('API Down') ||
+		           this.statusBarItem.text.includes('API Error') ||
+		           this.statusBarItem.text.includes('Network Error')) {
+			this.statusBarItem.command = 'chutes-quota.refresh';
+		} else {
+			this.statusBarItem.command = 'chutes-quota.openSettings';
 		}
 	}
 
