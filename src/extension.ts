@@ -191,13 +191,12 @@ class ChutesQuotaMonitor {
 	}
 
 	private createTooltip(quota: number, used: number, remaining: number, percentage: number): string {
-		return `Chutes.ai API Quota
-Used: ${Math.round(used)}
-Total: ${quota}
-Remaining: ${Math.round(remaining)}
-Usage: ${percentage}%
+    return `Daily Quota Usage
 
-Click for details or use Ctrl+Shift+P → "Chutes Quota: Show Details"`;
+Total: ${quota}
+Used: ${Math.round(used)}
+Remaining: ${Math.round(remaining)}
+Usage: ${percentage}%`;
 	}
 
 	private handleError(error: any): void {
