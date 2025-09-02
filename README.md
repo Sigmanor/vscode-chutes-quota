@@ -5,7 +5,7 @@
 [![GitHub Issues](https://img.shields.io/github/issues/sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Issues&labelColor=181717&color=red)](https://github.com/sigmanor/vscode-chutes-quota/issues)
 [![GitHub Stars](https://img.shields.io/github/stars/sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Stars&labelColor=181717&color=yellow)](https://github.com/sigmanor/vscode-chutes-quota/stargazers)
 
-A VSCode extension that monitors your Chutes.ai API subscription quota usage and displays it directly in the status bar with real-time updates.
+A VSCode extension that monitors your Chutes.ai API subscription quota usage and displays it directly in the status bar with with periodic updates.
 
 **Note**: This extension is an independent third-party tool and is not officially affiliated with or endorsed by chutes.ai or its developers. It is designed to help users monitor their subscription quotas.
 
@@ -27,17 +27,11 @@ A VSCode extension that monitors your Chutes.ai API subscription quota usage and
 4. Enter your Chutes.ai API token when prompted (input will be hidden for security)
 5. Optionally adjust the refresh interval in VSCode Settings
 
-### Alternative Setup (for existing users)
-
-If you previously had the token in settings, it will be automatically migrated to secure storage on first run.
-
 ## Configuration
 
 This extension contributes the following settings:
 
 * `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
-
-**Note**: The API token is now stored securely and is no longer visible in settings.
 
 ## Commands
 
