@@ -14,8 +14,6 @@ A VSCode extension that monitors your Chutes.ai API subscription quota usage and
 - **Comprehensive Error Handling**: Clear error messages for API issues and missing configuration
 - **Easy Setup**: Simple command to securely set your API token
 
-![Status Bar Preview](https://via.placeholder.com/400x50/1e1e1e/ffffff?text=Chutes:%20380/2000%20(19%25))
-
 ## Setup
 
 1. Install the extension
