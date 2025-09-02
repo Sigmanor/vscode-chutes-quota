@@ -179,7 +179,7 @@ class ChutesQuotaMonitor {
 			const remaining = quota - used;
 
 			// Update status bar
-			this.statusBarItem.text = `Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
+      this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
 			this.statusBarItem.tooltip = this.createTooltip(quota, used, remaining, percentage);
 			this.statusBarItem.backgroundColor = undefined;
 
