@@ -19,15 +19,15 @@ class ChutesQuotaMonitor {
 	private isRefreshing = false;
 
 	constructor(private context: vscode.ExtensionContext) {
-		// Create status bar item
+		// Create status bar items
 		this.statusBarItem = vscode.window.createStatusBarItem(
 			vscode.StatusBarAlignment.Right,
 			100
 		);
-		this.statusBarItem.command = 'chutes-quota.showDetails';
+		this.statusBarItem.command = 'chutes-quota.openSettings';
 		this.statusBarItem.show();
 		
-    // Migrate existing API token from settings to secure storage
+		  // Migrate existing API token from settings to secure storage
     this.migrateApiToken().then(() => {
       // Initial load after migration
       this.updateQuota();
@@ -55,11 +55,15 @@ class ChutesQuotaMonitor {
 			this.updateQuota();
 		});
 
-    const setTokenCommand = vscode.commands.registerCommand('chutes-quota.setApiToken', () => {
-      this.promptForApiToken();
-    });
+	   const setTokenCommand = vscode.commands.registerCommand('chutes-quota.setApiToken', () => {
+	     this.promptForApiToken();
+	   });
 
-    this.context.subscriptions.push(showDetailsCommand, refreshCommand, setTokenCommand);
+		const openSettingsCommand = vscode.commands.registerCommand('chutes-quota.openSettings', () => {
+			vscode.commands.executeCommand('workbench.action.openSettings', '@ext:sigmanor.vscode-chutes-quota');
+		});
+
+	   this.context.subscriptions.push(showDetailsCommand, refreshCommand, setTokenCommand, openSettingsCommand);
 	}
 
 	private getConfiguration(): ChutesQuotaConfig {
@@ -151,17 +155,17 @@ class ChutesQuotaMonitor {
     const apiToken = await this.getApiToken();
 		
     if (!apiToken.trim()) {
-			this.statusBarItem.text = '$(warning) Chutes: Setup Required';
-			this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
-			this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
-			return;
-		}
+   this.statusBarItem.text = '$(warning) Chutes: Setup Required';
+   this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
+   this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
+   return;
+  }
 
-		this.isRefreshing = true;
-		this.statusBarItem.text = '$(sync~spin) Chutes: Loading...';
-		this.statusBarItem.tooltip = 'Fetching quota information...';
-		this.statusBarItem.backgroundColor = undefined;
-
+		
+				this.isRefreshing = true;
+				this.statusBarItem.text = '$(sync~spin) Chutes: Loading...';
+				this.statusBarItem.tooltip = 'Fetching quota information...';
+				this.statusBarItem.backgroundColor = undefined;
 		try {
 			const response = await axios.get<ChutesQuotaResponse>(
 				'https://api.chutes.ai/users/me/quota_usage/me',
@@ -178,11 +182,11 @@ class ChutesQuotaMonitor {
 			const percentage = Math.round((used / quota) * 100);
 			const remaining = quota - used;
 
-			// Update status bar
-      this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
-			this.statusBarItem.tooltip = this.createTooltip(quota, used, remaining, percentage);
-			this.statusBarItem.backgroundColor = undefined;
-
+			
+						// Update status bar
+						   this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
+						this.statusBarItem.tooltip = this.createTooltip(quota, used, remaining, percentage);
+						this.statusBarItem.backgroundColor = undefined;
 		} catch (error) {
 			this.handleError(error);
 		} finally {
@@ -284,6 +288,25 @@ Usage: ${percentage}%`;
 			vscode.window.showInformationMessage(tooltipText, { modal: false });
 		} else {
 			vscode.window.showInformationMessage('Quota details: ' + this.statusBarItem.text);
+		}
+	}
+
+	// Note: VSCode doesn't provide hover events for status bar items
+	// This method is included for potential future use if VSCode adds this capability
+	private handleStatusBarHover(isHovering: boolean): void {		
+		// Only update if we have valid quota data
+		if (this.statusBarItem.text.includes('Chutes:') &&
+				!this.statusBarItem.text.includes('Setup Required') &&
+				!this.statusBarItem.text.includes('Loading') &&
+				!this.statusBarItem.text.includes('Error')) {
+			// Extract current quota information from text
+			const match = this.statusBarItem.text.match(/Chutes: (\d+)\/(\d+) \((\d+)%\)/);
+			if (match) {
+				const used = match[1];
+				const quota = match[2];
+				const percentage = match[3];
+				this.statusBarItem.text = `${isHovering ? '$(sync)' : '$(pulse)'} Chutes: ${used}/${quota} (${percentage}%)`;
+			}
 		}
 	}
 
