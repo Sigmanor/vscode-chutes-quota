@@ -62,7 +62,6 @@ The extension handles various error scenarios gracefully:
 The status bar item shows different states:
 
 - **Normal**: `Chutes: 380/2000 (19%)` - Current subscription usage with percentage
-- **Loading**: `Chutes: Loading...` - During API requests
 - **Setup Required**: `Chutes: Setup Required` - When API token is missing
 - **Error**: `Chutes: Error` - When API requests fail
 
