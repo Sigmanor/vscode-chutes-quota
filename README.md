@@ -1,5 +1,12 @@
 # Chutes.ai Quota Monitor for VSCode
 
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/Sigmanor.vscode-chutes-quota?style=flat&logo=visual-studio-code&logoColor=white&label=VS%20Code%20Marketplace&labelColor=007ACC&color=C41E3A)](https://marketplace.visualstudio.com/items?itemName=Sigmanor.vscode-chutes-quota)
+[![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/Sigmanor.vscode-chutes-quota?style=flat&logo=visual-studio-code&logoColor=white&label=Downloads&labelColor=007ACC&color=blue)](https://marketplace.visualstudio.com/items?itemName=Sigmanor.vscode-chutes-quota)
+[![Visual Studio Marketplace Rating](https://img.shields.io/visual-studio-marketplace/r/Sigmanor.vscode-chutes-quota?style=flat&logo=visual-studio-code&logoColor=white&label=Rating&labelColor=007ACC&color=brightgreen)](https://marketplace.visualstudio.com/items?itemName=Sigmanor.vscode-chutes-quota)
+[![GitHub License](https://img.shields.io/github/license/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=License&labelColor=181717&color=green)](https://github.com/Sigmanor/vscode-chutes-quota/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Issues&labelColor=181717&color=red)](https://github.com/Sigmanor/vscode-chutes-quota/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Stars&labelColor=181717&color=yellow)](https://github.com/Sigmanor/vscode-chutes-quota/stargazers)
+
 A VSCode extension that monitors your Chutes.ai API subscription quota usage and displays it directly in the status bar with real-time updates.
 
 **Note**: This extension is an independent third-party tool and is not officially affiliated with or endorsed by chutes.ai or its developers. It is designed to help users monitor their subscription quotas.
