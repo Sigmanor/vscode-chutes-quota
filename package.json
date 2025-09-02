@@ -2,8 +2,9 @@
   "name": "vscode-chutes-quota",
   "displayName": "vscode-chutes-quota",
   "description": "Monitor your Chutes.ai API quota directly in VSCode status bar with real-time usage statistics and customizable refresh intervals.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "sigmanor",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Sigmanor/vscode-chutes-quota"
