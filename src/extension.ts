@@ -9,7 +9,6 @@ interface ChutesQuotaResponse {
 
 // Interface for extension configuration
 interface ChutesQuotaConfig {
-	apiToken: string;
 	refreshInterval: number;
 }
 
@@ -28,9 +27,12 @@ class ChutesQuotaMonitor {
 		this.statusBarItem.command = 'chutes-quota.showDetails';
 		this.statusBarItem.show();
 		
-		// Initial load
-		this.updateQuota();
-		this.setupAutoRefresh();
+    // Migrate existing API token from settings to secure storage
+    this.migrateApiToken().then(() => {
+      // Initial load after migration
+      this.updateQuota();
+      this.setupAutoRefresh();
+    });
 		
 		// Register commands
 		this.registerCommands();
@@ -53,16 +55,78 @@ class ChutesQuotaMonitor {
 			this.updateQuota();
 		});
 
-		this.context.subscriptions.push(showDetailsCommand, refreshCommand);
+    const setTokenCommand = vscode.commands.registerCommand('chutes-quota.setApiToken', () => {
+      this.promptForApiToken();
+    });
+
+    this.context.subscriptions.push(showDetailsCommand, refreshCommand, setTokenCommand);
 	}
 
 	private getConfiguration(): ChutesQuotaConfig {
 		const config = vscode.workspace.getConfiguration('chutesQuota');
-		return {
-			apiToken: config.get<string>('apiToken', ''),
+    return {
 			refreshInterval: config.get<number>('refreshInterval', 5)
 		};
 	}
+
+  private async getApiToken(): Promise<string> {
+    return await this.context.secrets.get('chutesQuota.apiToken') || '';
+  }
+
+  private async setApiToken(token: string): Promise<void> {
+    await this.context.secrets.store('chutesQuota.apiToken', token);
+  }
+
+  private async promptForApiToken(): Promise<void> {
+    const currentToken = await this.getApiToken();
+    const placeholder = currentToken ? 'Enter new API token to replace existing' : 'Enter your Chutes.ai API token';
+
+    const token = await vscode.window.showInputBox({
+      prompt: 'Enter your Chutes.ai API token',
+      placeHolder: placeholder,
+      password: true, // Hide the input
+      ignoreFocusOut: true,
+      validateInput: (value) => {
+        if (!value || value.trim().length === 0) {
+          return 'API token cannot be empty';
+        }
+        if (value.length < 10) {
+          return 'API token seems too short';
+        }
+        return null;
+      }
+    });
+
+    if (token !== undefined) {
+      await this.setApiToken(token.trim());
+      vscode.window.showInformationMessage('API token has been saved securely.');
+
+      // Refresh quota after setting new token
+      this.updateQuota();
+    }
+  }
+
+  private async migrateApiToken(): Promise<void> {
+    // Check if we already have a token in secure storage
+    const existingToken = await this.getApiToken();
+    if (existingToken) {
+      return; // Already migrated or token already exists
+    }
+
+    // Check for old token in settings
+    const config = vscode.workspace.getConfiguration('chutesQuota');
+    const oldToken = config.get<string>('apiToken', '');
+
+    if (oldToken && oldToken.trim()) {
+      // Migrate the token to secure storage
+      await this.setApiToken(oldToken.trim());
+
+      // Remove the old token from settings
+      await config.update('apiToken', undefined, vscode.ConfigurationTarget.Global);
+
+      console.log('Chutes Quota: API token migrated to secure storage');
+    }
+  }
 
 	private setupAutoRefresh(): void {
 		// Clear existing timer
@@ -84,8 +148,9 @@ class ChutesQuotaMonitor {
 		}
 
 		const config = this.getConfiguration();
+    const apiToken = await this.getApiToken();
 		
-		if (!config.apiToken.trim()) {
+    if (!apiToken.trim()) {
 			this.statusBarItem.text = '$(warning) Chutes: Setup Required';
 			this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
 			this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
@@ -102,7 +167,7 @@ class ChutesQuotaMonitor {
 				'https://api.chutes.ai/users/me/quota_usage/me',
 				{
 					headers: {
-						'Authorization': `Bearer ${config.apiToken}`,
+            'Authorization': `Bearer ${apiToken}`,
 						'Content-Type': 'application/json'
 					},
 					timeout: 10000 // 10 second timeout
@@ -188,17 +253,17 @@ Click for details or use Ctrl+Shift+P → "Chutes Quota: Show Details"`;
 	}
 
 	private async showQuotaDetails(): Promise<void> {
-		const config = this.getConfiguration();
+    const apiToken = await this.getApiToken();
 		
-		if (!config.apiToken.trim()) {
+    if (!apiToken.trim()) {
 			const result = await vscode.window.showWarningMessage(
 				'Chutes.ai API token not configured. Would you like to set it up now?',
-				'Open Settings',
+        'Set API Token',
 				'Cancel'
 			);
 			
-			if (result === 'Open Settings') {
-				vscode.commands.executeCommand('workbench.action.openSettings', 'chutesQuota.apiToken');
+      if (result === 'Set API Token') {
+        await this.promptForApiToken();
 			}
 			return;
 		}
