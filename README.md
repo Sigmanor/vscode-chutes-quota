@@ -1,5 +1,11 @@
 # Chutes.ai Quota Monitor for VSCode
 
+[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/Sigmanor.vscode-chutes-quota?style=flat&logo=visual-studio-code&logoColor=white&label=VS%20Code%20Marketplace&labelColor=007ACC&color=C41E3A)](https://marketplace.visualstudio.com/items?itemName=Sigmanor.vscode-chutes-quota)
+[![Visual Studio Marketplace Downloads](https://img.shields.io/visual-studio-marketplace/d/Sigmanor.vscode-chutes-quota?style=flat&logo=visual-studio-code&logoColor=white&label=Downloads&labelColor=007ACC&color=blue)](https://marketplace.visualstudio.com/items?itemName=Sigmanor.vscode-chutes-quota)
+[![GitHub License](https://img.shields.io/github/license/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=License&labelColor=181717&color=green)](https://github.com/Sigmanor/vscode-chutes-quota/blob/main/LICENSE)
+[![GitHub Issues](https://img.shields.io/github/issues/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Issues&labelColor=181717&color=red)](https://github.com/Sigmanor/vscode-chutes-quota/issues)
+[![GitHub Stars](https://img.shields.io/github/stars/Sigmanor/vscode-chutes-quota?style=flat&logo=github&logoColor=white&label=Stars&labelColor=181717&color=yellow)](https://github.com/Sigmanor/vscode-chutes-quota/stargazers)
+
 A VSCode extension that monitors your Chutes.ai API subscription quota usage and displays it directly in the status bar with real-time updates.
 
 **Note**: This extension is an independent third-party tool and is not officially affiliated with or endorsed by chutes.ai or its developers. It is designed to help users monitor their subscription quotas.
@@ -13,8 +19,6 @@ A VSCode extension that monitors your Chutes.ai API subscription quota usage and
 - **Secure Token Storage**: API tokens are stored securely using VSCode's built-in secret storage
 - **Comprehensive Error Handling**: Clear error messages for API issues and missing configuration
 - **Easy Setup**: Simple command to securely set your API token
-
-![Status Bar Preview](https://via.placeholder.com/400x50/1e1e1e/ffffff?text=Chutes:%20380/2000%20(19%25))
 
 ## Setup
 
