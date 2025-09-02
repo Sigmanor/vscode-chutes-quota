@@ -2,7 +2,7 @@
   "name": "vscode-chutes-quota",
   "displayName": "vscode-chutes-quota",
   "description": "Monitor your Chutes.ai API quota directly in VSCode status bar with real-time usage statistics and customizable refresh intervals.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.103.0"
   },
@@ -24,24 +24,23 @@
         "command": "chutes-quota.refresh",
         "title": "Refresh Quota",
         "category": "Chutes Quota"
+      },
+      {
+        "command": "chutes-quota.setApiToken",
+        "title": "Set API Token",
+        "category": "Chutes Quota"
       }
     ],
     "configuration": {
       "title": "Chutes Quota",
       "properties": {
-        "chutesQuota.apiToken": {
-          "type": "string",
-          "default": "",
-          "description": "Your Chutes.ai API token for quota monitoring",
-          "order": 1
-        },
         "chutesQuota.refreshInterval": {
           "type": "number",
           "default": 5,
           "minimum": 1,
           "maximum": 60,
           "description": "Auto-refresh interval in minutes (1-60)",
-          "order": 2
+          "order": 1
         }
       }
     }
