@@ -7,7 +7,9 @@
     "vscode": "^1.103.0"
   },
   "categories": [
-    "Other"
+    "Other",
+    "AI",
+    "Visualization"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
