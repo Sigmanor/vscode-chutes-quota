@@ -8,25 +8,31 @@ A VSCode extension that monitors your Chutes.ai API quota usage and displays it 
 - **Detailed Tooltips**: Hover over the status bar item to see detailed breakdown
 - **Auto-refresh**: Automatically updates quota information every 5 minutes (configurable)
 - **Manual Refresh**: Use the command palette to manually refresh quota data
+- **Secure Token Storage**: API tokens are stored securely using VSCode's built-in secret storage
 - **Comprehensive Error Handling**: Clear error messages for API issues and missing configuration
-- **Easy Configuration**: Set your API token directly in VSCode settings
+- **Easy Setup**: Simple command to securely set your API token
 
 ![Status Bar Preview](https://via.placeholder.com/400x50/1e1e1e/ffffff?text=Chutes:%20380/2000%20(19%25))
 
 ## Setup
 
 1. Install the extension
-2. Open VSCode Settings (`Ctrl+,` or `Cmd+,`)
-3. Search for "Chutes Quota"
-4. Enter your Chutes.ai API token in the `chutesQuota.apiToken` setting
-5. Optionally adjust the refresh interval (default: 5 minutes)
+2. Open Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`)
+3. Run the command `Chutes Quota: Set API Token`
+4. Enter your Chutes.ai API token when prompted (input will be hidden for security)
+5. Optionally adjust the refresh interval in VSCode Settings
+
+### Alternative Setup (for existing users)
+
+If you previously had the token in settings, it will be automatically migrated to secure storage on first run.
 
 ## Configuration
 
 This extension contributes the following settings:
 
-* `chutesQuota.apiToken`: Your Chutes.ai API token (required)
 * `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
+
+**Note**: The API token is now stored securely and is no longer visible in settings.
 
 ## Commands
 
@@ -34,6 +40,7 @@ The extension provides the following commands accessible via Command Palette (`C
 
 * `Chutes Quota: Show Details` - Display detailed quota information
 * `Chutes Quota: Refresh Quota` - Manually refresh quota data
+* `Chutes Quota: Set API Token` - Securely set or update your API token
 
 ## API Integration
 
@@ -61,9 +68,13 @@ The status bar item shows different states:
 - **Setup Required**: `Chutes: Setup Required` - When API token is missing
 - **Error**: `Chutes: Error` - When API requests fail
 
-## Privacy
+## Privacy & Security
 
-This extension only communicates with the Chutes.ai API using your provided token. No data is collected or transmitted to third parties.
+- API tokens are stored securely using VSCode's built-in secret storage (encrypted)
+- Tokens are never stored in plain text in settings or configuration files
+- The extension only communicates with the Chutes.ai API using your provided token
+- No data is collected or transmitted to third parties
+- Automatic migration from old insecure storage to secure storage
 
 ## Requirements
 
@@ -72,6 +83,15 @@ This extension only communicates with the Chutes.ai API using your provided toke
 - Internet connection for API requests
 
 ## Release Notes
+
+### 0.0.2
+
+Security and usability improvements:
+- **Secure Token Storage**: API tokens now stored using VSCode's encrypted secret storage
+- **Automatic Migration**: Existing tokens automatically migrated from settings to secure storage
+- **New Command**: Added "Set API Token" command for easy token management
+- **Enhanced Privacy**: Tokens no longer visible in settings or configuration files
+- **Improved Setup**: Streamlined token configuration process
 
 ### 0.0.1
 
