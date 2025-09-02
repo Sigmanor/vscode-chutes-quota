@@ -38,6 +38,7 @@ The extension provides the following commands accessible via Command Palette (`C
 - `Chutes Quota: Show Details` - Display detailed subscription quota information
 - `Chutes Quota: Refresh Quota` - Manually refresh subscription quota data
 - `Chutes Quota: Set API Token` - Securely set or update your API token
+- `Chutes Quota: Remove API Token` - Securely remove your API token and reset the extension
 
 ## API Integration
 
