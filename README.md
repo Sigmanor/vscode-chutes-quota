@@ -16,8 +16,6 @@ A VSCode extension that monitors your Chutes.ai API subscription quota usage and
 - **Auto-refresh**: Automatically updates quota information every 5 minutes (configurable)
 - **Manual Refresh**: Use the command palette to manually refresh quota data
 - **Secure Token Storage**: API tokens are stored securely using VSCode's built-in secret storage
-- **Comprehensive Error Handling**: Clear error messages for API issues and missing configuration
-- **Easy Setup**: Simple command to securely set your API token
 
 ## Setup
 
@@ -31,19 +29,20 @@ A VSCode extension that monitors your Chutes.ai API subscription quota usage and
 
 This extension contributes the following settings:
 
-* `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
+- `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
 
 ## Commands
 
 The extension provides the following commands accessible via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
-* `Chutes Quota: Show Details` - Display detailed subscription quota information
-* `Chutes Quota: Refresh Quota` - Manually refresh subscription quota data
-* `Chutes Quota: Set API Token` - Securely set or update your API token
+- `Chutes Quota: Show Details` - Display detailed subscription quota information
+- `Chutes Quota: Refresh Quota` - Manually refresh subscription quota data
+- `Chutes Quota: Set API Token` - Securely set or update your API token
 
 ## API Integration
 
 The extension uses the Chutes.ai API endpoint:
+
 - **URL**: `https://api.chutes.ai/users/me/quota_usage/me`
 - **Authentication**: Bearer token
 - **Response**: JSON with subscription quota and used fields
