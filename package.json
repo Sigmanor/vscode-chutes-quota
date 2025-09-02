@@ -37,6 +37,11 @@
         "command": "chutes-quota.setApiToken",
         "title": "Set API Token",
         "category": "Chutes Quota"
+      },
+      {
+        "command": "chutes-quota.removeApiToken",
+        "title": "Remove API Token",
+        "category": "Chutes Quota"
       }
     ],
     "configuration": {
