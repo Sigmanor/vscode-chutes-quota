@@ -1,6 +1,6 @@
 {
   "name": "vscode-chutes-quota",
-  "displayName": "vscode-chutes-quota",
+  "displayName": "Chutes Quota",
   "description": "Monitor your Chutes.ai API quota directly in VSCode status bar.",
   "version": "0.0.5",
   "publisher": "sigmanor",
