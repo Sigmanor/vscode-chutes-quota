@@ -279,8 +279,8 @@ Usage: ${percentage}%`;
 	private showCachedDataWithRefreshIndicator(): void {
 		// Check if cached data exists
 		if (this.hasCachedData() && this.cachedQuota !== null && this.cachedUsed !== null && this.cachedPercentage !== null) {
-			// Show last data with sync icon instead of pulse
-			this.statusBarItem.text = `$(sync~spin) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
+      // Show last data without animated icon to make refresh less intrusive
+      this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
 			
 			// Set tooltip with refresh information
 			const remaining = this.cachedQuota - this.cachedUsed;
