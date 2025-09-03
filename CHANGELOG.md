@@ -2,6 +2,14 @@
 
 All notable changes to the "vscode-chutes-quota" extension will be documented in this file.
 
+## [0.0.5] - 2025-09-03
+
+### Changed
+- Removed animated icons during quota refresh and initial loading to make status-bar updates less intrusive (replaced `$(sync~spin)` with `$(pulse)`).
+- When cached data is shown during refresh, the UI now uses a static icon and subtle tooltip note instead of animated icons.
+- Error presentation simplified: status bar no longer forces a red background; errors are indicated with the `$(error)` icon and informative tooltip text.
+- Clicking the status bar when an error is shown now triggers the `chutes-quota.refresh` command (click-to-retry) instead of opening settings.
+
 ## [0.0.4] - 2025-09-02
 
 ### Added
