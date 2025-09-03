@@ -214,7 +214,8 @@ class ChutesQuotaMonitor {
 				if (this.hasCachedData()) {
 					this.showCachedDataWithRefreshIndicator();
 				} else {
-					this.statusBarItem.text = '$(sync~spin) Chutes: Loading...';
+          // Use a non-animated icon for initial loading to make updates less intrusive
+          this.statusBarItem.text = '$(pulse) Chutes: Loading...';
 					this.statusBarItem.tooltip = 'Fetching quota information...';
 					this.statusBarItem.backgroundColor = undefined;
 					this.updateStatusBarCommand();
