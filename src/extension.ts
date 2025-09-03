@@ -357,7 +357,8 @@ Usage: ${percentage}%`;
 			this.statusBarItem.tooltip = `Error fetching quota: ${errorMessage}\n\nClick to retry or check configuration`;
 		}
 		
-		this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.errorBackground');
+    // Clear explicit background to avoid aggressive red background; rely on icon and text for error visibility
+    this.statusBarItem.backgroundColor = undefined;
 		this.updateStatusBarCommand();
 
 		console.error('Chutes Quota Error:', error);
