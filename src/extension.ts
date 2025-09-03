@@ -428,7 +428,7 @@ Usage: ${percentage}%`;
 	private updateStatusBarCommand(): void {
 		if (this.statusBarItem.text.includes('Setup Required')) {
 			this.statusBarItem.command = 'chutes-quota.setApiToken';
-		} else if (this.statusBarItem.text.includes('Error') ||
+    } else if (this.statusBarItem.text.includes('$(error)') || this.statusBarItem.text.includes('Error') ||
 		           this.statusBarItem.text.includes('Invalid Token') ||
 		           this.statusBarItem.text.includes('Forbidden') ||
 		           this.statusBarItem.text.includes('Rate Limited') ||
