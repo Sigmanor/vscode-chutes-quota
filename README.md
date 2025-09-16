@@ -2,13 +2,12 @@
 
 <img width="181" height="162" alt="image" src="https://github.com/user-attachments/assets/4b13cd32-3b3d-482a-a7b0-3594f29a7a81" />
 
-
 A VSCode extension that monitors your Chutes.ai subscription quota usage and displays it directly in the status bar with with periodic updates.
 
 > [!IMPORTANT]  
 > This extension is an independent third-party tool and is not officially affiliated with or endorsed by chutes.ai or its developers. It is designed to help users monitor their subscription quotas.
 
-## Features
+## ✨ Features
 
 - **Status Bar Integration**: Shows current subscription quota usage in format "Chutes: 380/2000 (19%)"
 - **Detailed Tooltips**: Hover over the status bar item to see detailed breakdown of your subscription quota
@@ -16,7 +15,7 @@ A VSCode extension that monitors your Chutes.ai subscription quota usage and dis
 - **Manual Refresh**: Use the command palette to manually refresh quota data
 - **Secure Token Storage**: API tokens are stored securely using VSCode's built-in secret storage
 
-## Setup
+## 🚀 Setup
 
 1. Install the extension
 2. Open Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`)
@@ -24,13 +23,13 @@ A VSCode extension that monitors your Chutes.ai subscription quota usage and dis
 4. Enter your Chutes.ai API token when prompted (input will be hidden for security)
 5. Optionally adjust the refresh interval in VSCode Settings
 
-## Configuration
+## ⚙️ Configuration
 
 This extension contributes the following settings:
 
 - `chutesQuota.refreshInterval`: Auto-refresh interval in minutes (1-60, default: 5)
 
-## Commands
+## 🔧 Commands
 
 The extension provides the following commands accessible via Command Palette (`Ctrl+Shift+P` or `Cmd+Shift+P`):
 
@@ -39,7 +38,7 @@ The extension provides the following commands accessible via Command Palette (`C
 - `Chutes Quota: Set API Token` - Securely set or update your API token
 - `Chutes Quota: Remove API Token` - Securely remove your API token and reset the extension
 
-## API Integration
+## 🔌 API Integration
 
 The extension uses the Chutes.ai API endpoint:
 
@@ -47,32 +46,14 @@ The extension uses the Chutes.ai API endpoint:
 - **Authentication**: Bearer token
 - **Response**: JSON with subscription quota and used fields
 
-## Error Handling
-
-The extension handles various error scenarios gracefully:
-
-- **Missing API Token**: Shows warning with setup instructions
-- **Invalid Token**: Clear error message with guidance
-- **Network Issues**: Displays network error with retry options
-- **API Errors**: Shows specific error messages based on API response
-- **Rate Limiting**: Notifies when rate limits are exceeded
-
-## Status Bar States
-
-The status bar item shows different states:
-
-- **Normal**: `Chutes: 380/2000 (19%)` - Current subscription usage with percentage
-- **Setup Required**: `Chutes: Setup Required` - When API token is missing
-- **Error**: `Chutes: Error` - When API requests fail
-
-## Privacy & Security
+## 🔒 Privacy & Security
 
 - API tokens are stored securely using VSCode's built-in secret storage (encrypted)
 - Tokens are never stored in plain text in settings or configuration files
 - The extension only communicates with the Chutes.ai API using your provided token
 - No data is collected or transmitted to third parties
 
-## Requirements
+## 📋 Requirements
 
 - VSCode version 1.103.0 or higher
 - Valid Chutes.ai API token
