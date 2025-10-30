@@ -21,6 +21,7 @@ class ChutesQuotaMonitor {
 	private cachedUsed: number | null = null;
 	private cachedPercentage: number | null = null;
 	private lastSuccessfulUpdate: Date | null = null;
+	private cachedTooltip: string | undefined = undefined;
 
 	constructor(private context: vscode.ExtensionContext) {
 		// Create status bar items
@@ -147,10 +148,10 @@ class ChutesQuotaMonitor {
     if (result === 'Remove Token') {
       await this.removeApiToken();
       vscode.window.showInformationMessage('API token has been removed successfully.');
-      
+
       // Update status bar to show setup required
       this.statusBarItem.text = '$(warning) Chutes: Setup Required';
-      this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
+      this.setTooltip('Click to configure your Chutes.ai API token');
       this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
       this.updateStatusBarCommand();
     }
@@ -202,7 +203,7 @@ class ChutesQuotaMonitor {
 		
     if (!apiToken.trim()) {
    this.statusBarItem.text = '$(warning) Chutes: Setup Required';
-   this.statusBarItem.tooltip = 'Click to configure your Chutes.ai API token';
+   this.setTooltip('Click to configure your Chutes.ai API token');
    this.statusBarItem.backgroundColor = new vscode.ThemeColor('statusBarItem.warningBackground');
    this.updateStatusBarCommand();
    return;
@@ -216,7 +217,7 @@ class ChutesQuotaMonitor {
 				} else {
           // Use a non-animated icon for initial loading to make updates less intrusive
           this.statusBarItem.text = '$(pulse) Chutes: Loading...';
-					this.statusBarItem.tooltip = 'Fetching quota information...';
+					this.setTooltip('Fetching quota information...');
 					this.statusBarItem.backgroundColor = undefined;
 					this.updateStatusBarCommand();
 				}
@@ -261,13 +262,13 @@ Usage: ${percentage}%`;
 		this.cachedUsed = used;
 		this.cachedPercentage = percentage;
 		this.lastSuccessfulUpdate = new Date();
-		
+
 		// Update status bar text
 		this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
-		
+
 		// Update tooltip
 		const remaining = quota - used;
-		this.statusBarItem.tooltip = this.createTooltip(quota, used, remaining, percentage);
+		this.setTooltip(this.createTooltip(quota, used, remaining, percentage));
 		this.statusBarItem.backgroundColor = undefined;
 		this.updateStatusBarCommand();
 	}
@@ -276,15 +277,26 @@ Usage: ${percentage}%`;
 		return this.cachedQuota !== null && this.cachedUsed !== null && this.cachedPercentage !== null;
 	}
 
+	/**
+	 * Safely update tooltip only if the value has changed
+	 * This prevents tooltip flickering when hovering
+	 */
+	private setTooltip(tooltip: string): void {
+		if (this.cachedTooltip !== tooltip) {
+			this.cachedTooltip = tooltip;
+			this.statusBarItem.tooltip = tooltip;
+		}
+	}
+
 	private showCachedDataWithRefreshIndicator(): void {
 		// Check if cached data exists
 		if (this.hasCachedData() && this.cachedQuota !== null && this.cachedUsed !== null && this.cachedPercentage !== null) {
       // Show last data without animated icon to make refresh less intrusive
       this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
-			
+
 			// Set tooltip with refresh information
 			const remaining = this.cachedQuota - this.cachedUsed;
-			this.statusBarItem.tooltip = `${this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage)}\n\nRefreshing...`;
+			this.setTooltip(`${this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage)}\n\nRefreshing...`);
 			this.updateStatusBarCommand();
 		}
 	}
@@ -338,23 +350,23 @@ Usage: ${percentage}%`;
 		if (this.hasCachedData() && this.cachedQuota !== null && this.cachedUsed !== null && this.cachedPercentage !== null) {
 			// Show cached data with error icon
 			this.statusBarItem.text = `$(error) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
-			
+
 			// Add information about last successful update time in tooltip
 			const remaining = this.cachedQuota - this.cachedUsed;
 			let tooltip = this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage);
-			
+
 			if (this.lastSuccessfulUpdate) {
 				const timeString = this.lastSuccessfulUpdate.toLocaleTimeString();
 				tooltip += `\n\nLast updated: ${timeString}\nError: ${errorMessage}`;
 			} else {
 				tooltip += `\n\nError: ${errorMessage}`;
 			}
-			
-			this.statusBarItem.tooltip = tooltip;
+
+			this.setTooltip(tooltip);
 		} else {
 			// No cached data, show error message
 			this.statusBarItem.text = statusText;
-			this.statusBarItem.tooltip = `Error fetching quota: ${errorMessage}\n\nClick to retry or check configuration`;
+			this.setTooltip(`Error fetching quota: ${errorMessage}\n\nClick to retry or check configuration`);
 		}
 		
     // Clear explicit background to avoid aggressive red background; rely on icon and text for error visibility
