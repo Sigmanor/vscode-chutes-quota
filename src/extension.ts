@@ -234,12 +234,10 @@ class ChutesQuotaMonitor {
 			);
 
 			const { quota, used } = response.data;
-			const percentage = Math.round((used / quota) * 100);
-			const remaining = quota - used;
+			const { percentage } = this.normalizeQuotaMetrics(quota, used);
 
-			
-						// Update status bar using cached display method
-						this.updateStatusBarDisplay(quota, used, percentage);
+			// Update status bar using cached display method
+			this.updateStatusBarDisplay(quota, used, percentage);
 		} catch (error) {
 			this.handleError(error);
 		} finally {
@@ -247,12 +245,13 @@ class ChutesQuotaMonitor {
 		}
 	}
 
-	private createTooltip(quota: number, used: number, remaining: number, percentage: number): string {
-	   return `Daily Quota Usage
+	private createTooltip(quota: number, used: number): string {
+		const { remaining, percentage } = this.normalizeQuotaMetrics(quota, used);
+		return `Daily Quota Usage
 
 Total: ${quota}
 Used: ${Math.round(used)}
-Remaining: ${Math.round(remaining)}
+Remaining: ${remaining}
 Usage: ${percentage}%`;
 	}
 
@@ -267,8 +266,7 @@ Usage: ${percentage}%`;
 		this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(used)}/${quota} (${percentage}%)`;
 
 		// Update tooltip
-		const remaining = quota - used;
-		this.setTooltip(this.createTooltip(quota, used, remaining, percentage));
+		this.setTooltip(this.createTooltip(quota, used));
 		this.statusBarItem.backgroundColor = undefined;
 		this.updateStatusBarCommand();
 	}
@@ -295,8 +293,7 @@ Usage: ${percentage}%`;
       this.statusBarItem.text = `$(pulse) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
 
 			// Set tooltip with refresh information
-			const remaining = this.cachedQuota - this.cachedUsed;
-			this.setTooltip(`${this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage)}\n\nRefreshing...`);
+			this.setTooltip(`${this.createTooltip(this.cachedQuota, this.cachedUsed)}\n\nRefreshing...`);
 			this.updateStatusBarCommand();
 		}
 	}
@@ -352,8 +349,7 @@ Usage: ${percentage}%`;
 			this.statusBarItem.text = `$(error) Chutes: ${Math.round(this.cachedUsed)}/${this.cachedQuota} (${this.cachedPercentage}%)`;
 
 			// Add information about last successful update time in tooltip
-			const remaining = this.cachedQuota - this.cachedUsed;
-			let tooltip = this.createTooltip(this.cachedQuota, this.cachedUsed, remaining, this.cachedPercentage);
+			let tooltip = this.createTooltip(this.cachedQuota, this.cachedUsed);
 
 			if (this.lastSuccessfulUpdate) {
 				const timeString = this.lastSuccessfulUpdate.toLocaleTimeString();
@@ -429,6 +425,24 @@ Usage: ${percentage}%`;
 				this.statusBarItem.text = `${isHovering ? '$(sync)' : '$(pulse)'} Chutes: ${used}/${quota} (${percentage}%)`;
 			}
 		}
+	}
+
+	private normalizeQuotaMetrics(quota: number, used: number): { remaining: number; percentage: number } {
+		const safeQuota = Math.max(0, quota);
+		const safeUsed = Math.max(0, used);
+		const remaining = Math.max(0, Math.round(safeQuota - safeUsed));
+
+		let percentage: number;
+		if (safeQuota === 0) {
+			percentage = safeUsed > 0 ? 100 : 0;
+		} else {
+			percentage = Math.round((safeUsed / safeQuota) * 100);
+		}
+
+		return {
+			remaining,
+			percentage: Math.min(100, Math.max(0, percentage))
+		};
 	}
 
 	/**
