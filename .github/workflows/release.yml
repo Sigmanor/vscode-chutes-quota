@@ -1,0 +1,137 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get package version
+        id: package_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Package version: $VERSION"
+
+      - name: Check if tag exists
+        id: check_tag
+        run: |
+          if git rev-parse "v${{ steps.package_version.outputs.version }}" >/dev/null 2>&1; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.package_version.outputs.version }} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "Tag v${{ steps.package_version.outputs.version }} does not exist"
+          fi
+
+      - name: Verify version is higher
+        if: steps.check_tag.outputs.exists == 'true'
+        run: |
+          echo "Error: Tag v${{ steps.package_version.outputs.version }} already exists!"
+          echo "Please update the version in package.json before creating a release."
+          exit 1
+
+      - name: Install git-cliff
+        run: |
+          curl -L https://github.com/orhun/git-cliff/releases/download/v2.7.0/git-cliff-2.7.0-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          sudo mv git-cliff-2.7.0/git-cliff /usr/local/bin/
+          git-cliff --version
+
+      - name: Generate changelog with git-cliff
+        id: changelog
+        run: |
+          VERSION="v${{ steps.package_version.outputs.version }}"
+
+          # Generate release notes for unreleased commits with the new version tag
+          git cliff --unreleased --tag $VERSION --strip all -o RELEASE_NOTES.md
+
+          # Also save to output for GitHub release
+          {
+            echo 'notes<<EOF'
+            cat RELEASE_NOTES.md
+            echo EOF
+          } >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG.md
+        run: |
+          VERSION="v${{ steps.package_version.outputs.version }}"
+
+          # Generate full CHANGELOG.md including the new unreleased version
+          git cliff --unreleased --tag $VERSION -o CHANGELOG.md
+
+      - name: Commit changelog
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add CHANGELOG.md
+
+          # Only commit if there are changes
+          if git diff --staged --quiet; then
+            echo "No changes to CHANGELOG.md"
+          else
+            git commit -m "chore: update CHANGELOG.md for v${{ steps.package_version.outputs.version }}"
+            git push
+          fi
+
+      - name: Build VSIX package
+        run: npm run package-vsix
+
+      - name: Get VSIX filename
+        id: vsix
+        run: |
+          VSIX_FILE=$(ls build/*.vsix | head -n 1)
+          echo "file=$VSIX_FILE" >> $GITHUB_OUTPUT
+          echo "name=$(basename $VSIX_FILE)" >> $GITHUB_OUTPUT
+
+      - name: Create Git Tag
+        run: |
+          # Create and push the tag after CHANGELOG is committed
+          git tag -a v${{ steps.package_version.outputs.version }} -m "Release v${{ steps.package_version.outputs.version }}"
+          git push origin v${{ steps.package_version.outputs.version }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ steps.package_version.outputs.version }}
+          name: Release v${{ steps.package_version.outputs.version }}
+          body_path: RELEASE_NOTES.md
+          draft: false
+          prerelease: false
+          files: ${{ steps.vsix.outputs.file }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to VS Code Marketplace
+        run: |
+          npm install -g @vscode/vsce
+          vsce publish -p ${{ secrets.VSCE_PAT }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Release Summary
+        run: |
+          echo "✅ Release v${{ steps.package_version.outputs.version }} completed successfully!"
+          echo ""
+          echo "📦 VSIX: ${{ steps.vsix.outputs.name }}"
+          echo "🏷️ Tag: v${{ steps.package_version.outputs.version }}"
+          echo "📝 Changelog updated"
+          echo "🚀 Published to VS Code Marketplace"
