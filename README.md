@@ -1,6 +1,4 @@
-# Chutes.ai Quota Monitor for VSCode
-
-<img width="181" height="162" alt="image" src="https://github.com/user-attachments/assets/4b13cd32-3b3d-482a-a7b0-3594f29a7a81" />
+# vscode-chutes-quota
 
 A VSCode extension that monitors your Chutes.ai subscription quota usage and displays it directly in the status bar with with periodic updates.
 
@@ -58,3 +56,11 @@ The extension uses the Chutes.ai API endpoint:
 - VSCode version 1.103.0 or higher
 - Valid Chutes.ai API token
 - Internet connection for API requests
+
+## 📸 Screenshots
+
+<img width="181" height="162" alt="image" src="https://github.com/user-attachments/assets/4b13cd32-3b3d-482a-a7b0-3594f29a7a81" />
+
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
