@@ -1,6 +1,12 @@
-# Change Log
+# Changelog
 
 All notable changes to the "vscode-chutes-quota" extension will be documented in this file.
+
+## [0.0.7] - 2025-12-19
+
+### Fixed
+
+- Normalize quota metrics before display
 
 ## [0.0.6] - 2025-10-30
 
